@@ -1,0 +1,123 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Models\Member;
+use Illuminate\Http\Request;
+
+class MemberController extends Controller
+{
+    public function index()
+    {
+        $data = Member::all();
+        return view('admin.membermaster.index', compact('data'));
+    }
+
+    public function checkDevice(Request $request)
+    {
+        $deviceId = $request->header('Device-Id');
+        if (!$deviceId) {
+            return response()->json([
+                'status' => false,
+                'message' => 'device_id missing in header'
+            ], 400);
+        } else {
+
+            $exists = Member::where('device_id', $deviceId)->exists();
+
+            if (empty($exists)) {
+                return response()->json([
+                    "status" => false,
+                ]);
+            }
+
+            return response()->json([
+                'status' => true,
+            ]);
+        }
+    }
+
+    // update user(member) status 
+    // public function updatestatus(Request $request, $id = null)
+    // {
+    //     $member = Member::find($id);
+    //     $user = User::where('user_id', $member->id)->first();
+    //     $status = $request->status;
+    //     if (!empty($member)) {
+    //         $member->status = $status;
+    //         $user->status = $status;
+    //         $member->save();
+    //         $user->save();
+    //         return response()->json(['success' => true, 'message' => 'Status updated']);
+    //     }
+    //     return response()->json(['success' => false, 'message' => 'User not found']);
+    // }
+
+    //Member form 
+    public function member_action(Request $request)
+    {
+        $action = $request->route()->parameter('action');
+
+        $getdata = [];
+        $userdata = [];
+
+        if (isset($request->id) && !empty($request->id)) {
+            $getdata = Member::where('id', $request->id)->first();
+            // $userdata = User::where('user_id', $getdata->id)->first();
+        }
+
+        return view('admin.membermaster.action', compact('getdata', 'action', 'userdata'));
+    }
+
+    //Member form post request
+    public function member_post_action(Request $request)
+    {
+        // $action = $request->route()->parameter('action');
+        $rules = [
+            'uid'   => 'required|unique:members,uid,' . $request->edit_id,
+            'name' => 'required',
+            'email'      => 'nullable',
+            'mobile'       => 'required|numeric',
+            'status'       => 'required|numeric',
+
+        ];
+
+        $request->validate($rules);
+
+        $data = [
+            'uid'   => $request->uid,
+            'name' => $request->name,
+            'email'  => $request->email,
+            'mobile' => $request->mobile,
+            'device_id' => $request->device_id,
+            'status' => $request->status,
+        ];
+
+        Member::updateOrCreate(
+            ['id' => $request->edit_id],
+            $data
+        );
+
+
+        return redirect()->route('memberlist')->with('success', 'Submitted Successfully...');
+    }
+
+    public function delete($id)
+    {
+
+        $Member = Member::findOrFail($id);
+        $user = User::where('user_id', $Member->teacher_id)->first();
+        if (!empty($Member->document)) {
+            $filePath = public_path($Member->document);
+            if (file_exists($filePath)) {
+                @unlink($filePath);
+            }
+        }
+
+        $Member->delete();
+        $user->delete();
+
+        return response()->json(['success' => true, 'message' => 'Teacher deleted successfully.']);
+    }
+}

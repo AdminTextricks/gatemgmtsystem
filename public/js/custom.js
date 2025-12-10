@@ -118,24 +118,16 @@
 }
 
 {
-    const studentModules = document.getElementById("studentmodules");
-    if (studentModules) {
-        const activeItem = studentModules.querySelector(".nav > li.active");
+    const memberModules = document.getElementById("membermodules");
+    console.log(memberModules);
+    if (memberModules) {
+        const activeItem = memberModules.querySelector(".nav > li.active");
         if (activeItem) {
-            studentModules.classList.add("show");
+            memberModules.classList.add("show");
         }
     }
 }
 
-{
-    const feemodules = document.getElementById("feemodules");
-    if (feemodules) {
-        const activeItem = feemodules.querySelector(".nav > li.active");
-        if (activeItem) {
-            feemodules.classList.add("show");
-        }
-    }
-}
 
 {
     $(function () {

@@ -1,0 +1,158 @@
+.rp_table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+#qrImage {
+  display: block;
+  margin: 0 auto;
+  max-width: 250px;
+  max-height: 250px;
+  width: 100%;
+  height: auto;
+}
+#StudentImage,#leaveAttachment {
+  display: block;
+  margin: 0 auto;  
+  object-fit: contain;
+  width: 400px;
+  height: 400px;
+}
+
+button.close {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sign_in_button {
+  background-color: #f5a601;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease-in-out;
+}
+
+.sign_in_button:hover {
+  background-color: #f5b11d;
+  transform: scale(1.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 1);
+}
+
+.main-panel>.content {
+  /* z-index: 1032; */
+  margin-top: 20px;
+}
+
+div.dt-container div.dt-layout-row {
+  margin: 0 !important;
+}
+
+
+
+/* Export buttons (Copy, CSV, Excel, PDF) */
+div.dt-buttons>.dt-button,
+div.dt-buttons>div.dt-button-split .dt-button {
+  background: #51cbd1 !important;
+  /* Primary blue */
+  border: none !important;
+  color: #fff !important;
+  font-weight: 500 !important;
+  padding: 6px 14px !important;
+  margin: 4px 3px !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+div.dt-buttons>.dt-button:hover,
+div.dt-buttons>div.dt-button-split .dt-button:hover {
+  background: #2eaab1 !important;
+  /* Darker blue on hover */
+}
+
+/* "Select Columns" dropdown button */
+.dt-button-collection,
+.dt-button.buttons-colvis {
+  background: #51cbd1 !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 6px 14px;
+  margin: 4px 3px;
+}
+
+div.dt-button-collection .dt-button:hover:not(.disabled) {
+  background: #2eaab1 !important;
+}
+
+.dt-buttons {
+  display: inline-flex;
+  flex-wrap: wrap;
+  /* gap: 4px; */
+  margin-bottom: 12px;
+  float: left;
+}
+
+.dataTables_filter {
+  float: right;
+  margin-bottom: 12px;
+}
+
+.card-header {
+  padding-bottom: 0px;
+}
+
+.card .card-body {
+  padding-top: 0px;
+}
+
+.dt-layout-row {
+  margin-top: 0px;
+}
+
+.form-group .form-control,
+.input-group .form-control {
+  padding: 8px;
+}
+
+table.dataTable th.dt-type-numeric {
+  text-align: left !important;
+}
+
+.form-box {
+  position: relative;
+  width: 400px;
+  height: 450px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.custom-shadow {
+  border: none;
+  height: 2px;
+  background: #e0e0e0;
+  box-shadow: 0 2px 6px rgba(71, 71, 71, 0.2);
+  margin-top: 35px;
+  margin-bottom: 20px;
+
+}
+
+.tooltip-inner {
+  background-color: #51cbce !important;
+  color: #fff !important;              
+  font-size: 14px !important;
+  padding: 5px 10px !important;
+}
+
+.view_button {
+    background: none !important;
+    color: #51cbce !important;
+    border: none !important;
+    padding: 4px !important;
+
+}

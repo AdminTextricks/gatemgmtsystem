@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->unique();
+            $table->string('mobile')->unique();
             $table->string('uid')->unique(); 
             $table->string('device_id')->unique()->nullable(); 
             $table->tinyInteger('status')->default(1)->comment('1=Active, 0=Inactive');

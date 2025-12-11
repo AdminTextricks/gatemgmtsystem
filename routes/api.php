@@ -21,5 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/check-device', [MemberController::class, 'checkDevice'])->name('check_device');
-Route::get('/check-phone-exist', [MemberController::class, 'checkPhone'])->name('check_phone');
-Route::get('/link-device', [UserController::class, 'member_post_action'])->name('link_device');
+Route::post('/check-phone-exist', [MemberController::class, 'checkPhone'])->name('check_phone');
+Route::post('/link-device', [UserController::class, 'member_post_action'])->name('link_device');

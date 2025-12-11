@@ -56,7 +56,7 @@ class MemberController extends Controller
             if (empty($memberdetails)) {
                 return response()->json([
                     "status" => false,
-                ], 400);
+                ], 203);
             } else {
                 $data = [
                     'email' => $memberdetails->email ?? '',
@@ -65,7 +65,7 @@ class MemberController extends Controller
                 return response()->json([
                     'status' => true,
                     "member_data" => $data,
-                ], 201);
+                ], 200);
             }
         }
     }

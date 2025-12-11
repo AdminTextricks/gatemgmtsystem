@@ -97,7 +97,6 @@ class UserController extends Controller
             'email'   => 'required|unique:users,email,' . $request->edit_id,
             'password' => 'required|string|min:6|confirmed',
             'mobile' => 'required|digits:10',
-            'device_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -107,8 +106,8 @@ class UserController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-
-        if (!empty($request->mobile) && !empty($request->device_id)) {
+        
+        if (!empty($request->mobile) && !empty($request->header('Device-Id'))) {
             $member = Member::where('mobile', $request->mobile)->first();
             $role = 'member';
             $firstName = explode(' ', trim($member->name))[0];
@@ -137,7 +136,7 @@ class UserController extends Controller
 
         User::updateOrCreate(['id'=> $request->edit_id], $data);
 
-        $member->device_id = $request->device_id;
+        $member->device_id = $request->header('Device-Id');
         $member->save();
 
         if (!empty($request->mobile)) {

@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'class' => '',
-    'elementActive' => 'teacherlist',
+    'elementActive' => 'visitorlist',
 ])
 
 @section('content')
@@ -10,10 +10,10 @@
                 <div class="card">
                     <div class="card-header">
                         <div class=" d-flex justify-content-between align-items-center">
-                            <h6 class="card-title mb-0"><i class="nc-icon nc-tile-56"></i> MemberList</h6>
-                            <a href="{{ route('member_action', ['action' => 'Add']) }}"
+                            <h6 class="card-title mb-0"><i class="nc-icon nc-tile-56"></i> Visitor List</h6>
+                            <a href="{{ route('visitor_action', ['action' => 'Add']) }}"
                                 class="btn btn-sm btn-outline-info pull-right"><i class="fa fa-plus"></i>&nbsp;Add New
-                                Member</a>
+                                Visitor</a>
 
                         </div>
                         <hr>
@@ -31,11 +31,13 @@
                             <table class="table text-center table-bordered alltable" id="example">
                                 <thead class="text-primary">
                                     <tr>
-                                        <th> NAME</th>
+                                        <th>NAME</th>
                                         <th>E-MAIL</th>
                                         <th>MOBILE</th>
                                         <th>UNIQUE ID</th>
-                                        <th>DEVICE ID</th>
+                                        <th>DATE</th>
+                                        <th>DURATION</th>
+                                        <th>MAXIMUM ALLOW DAYS</th>
                                         <th>STATUS</th>
                                         <th class="not-export">ACTION</th>
                                     </tr>
@@ -48,21 +50,23 @@
                                             <td>{{ $getdata->email ?? 'NA' }}</td>
                                             <td>{{ $getdata->mobile  ?? 'NA' }}</td>
                                             <td>{{ $getdata->uid  ?? 'NA' }}</td>
-                                            <td>{{ $getdata->device_id   ?? 'NA' }}</td>
+                                            <td>{{ $getdata->date   ?? 'NA' }}</td>
+                                            <td>{{ $getdata->duration   ?? 'NA' }}</td>
+                                            <td>{{ $getdata->max_allow_days   ?? 'NA' }}</td>
                                             <td><button type="button"
                                                     class="btn btn-primary border-0 p-1 text-capitalize statusBtn"
                                                     data-toggle="modal" data-target="#myModal"
                                                     data-id="{{ $getdata->id }}" data-status="{{ $getdata->status }}">
                                                     {{ $getdata->status ? 'Active' : 'InActive' }}</button></td>
                                             <td class="not-export">
-                                                <a href="{{ route('member_action', ['action' => 'Edit', 'id' => $getdata->id]) }}"
+                                                <a href="{{ route('visitor_action', ['action' => 'Edit', 'id' => $getdata->id]) }}"
                                                     class="text-primary">
                                                     <i class="fa fa-edit
                                             "></i>
                                                 </a>&nbsp;
 
                                                 <a href="javascript:void(0)" class="text-danger"
-                                                    onclick="deleteMember('{{ route('member.delete', $getdata->id) }}')">
+                                                    onclick="deleteVisitor('{{ route('visitor.delete', $getdata->id) }}')">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
 
@@ -109,11 +113,9 @@
                 </div>
             </div>
         </div>
-         <!-- End Status Modal -->
-
 
         <script>
-            function deleteMember(url) {
+            function deleteVisitor(url) {
                 Swal.fire({
                     title: "Are you sure?",
                     text: "You won't be able to revert this!",
@@ -135,7 +137,7 @@
                             .then(data => {
                                 if (data.success) {
                                     Swal.fire("Deleted!", "Your record has been deleted.", "success")
-                                        .then(() => location.reload()); 
+                                        .then(() => location.reload()); // Refresh page after success
                                 } else {
                                     Swal.fire("Error!", "Failed to delete the record.", "error");
                                 }
@@ -148,6 +150,32 @@
                 });
             }
         </script>
-     
        
+        <script>
+            let visitorId = null;
+            $('#myModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var status = button.data('status');
+                visitorId = button.data('id');
+                $(this).find('#status').val(status);
+
+            });
+            $(document).on('click', '.update_status', function() {
+                let status = $('#status').val();
+                $.ajax({
+                    url: "{{ url('visitorlist/updatestatus') }}/" + teacherId,
+                    type: 'post',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        status: status,
+                    },
+                    success: function(response) {
+                        location.reload();
+                    },
+                    error: function() {
+                        alert('Something went wrong');
+                    }
+                })
+            });
+        </script>
     @endsection

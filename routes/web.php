@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Student\StudentAdmissionController;
+use App\Http\Controllers\VisitorDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,12 +50,14 @@ Route::group(['dashboard', 'middleware' => 'auth'], function () {
 		Route::post('/post', [MemberController::class, 'member_post_action'])->name('member.action');
 		Route::delete('/delete/{id}', [MemberController::class, 'delete'])->name('member.delete');
 	});
-	// Route::group(['prefix' => 'disabilitylist'], function () {
-	// 	Route::get('/', [DisabilityMatserController::class, 'index'])->name('disabilitylist');
-	// 	Route::get('/{action}/{id?}', [DisabilityMatserController::class, 'disability_action'])->name('disability_action');
-	// 	Route::post('/post', [DisabilityMatserController::class, 'disability_post_action'])->name('disability.action');
-	// 	Route::delete('/delete/{id}', [DisabilityMatserController::class, 'delete'])->name('disability.delete');
-	// });
+
+	Route::group(['prefix' => 'visitorlist'], function () {
+		Route::get('/', [VisitorDetailController::class, 'index'])->name('visitorlist');
+		Route::get('/{action}/{id?}', [VisitorDetailController::class, 'visitor_action'])->name('visitor_action');
+		// Route::get('/updatestatus', [VisitorDetailController::class, 'updatestatus'])->name('update_status');
+		Route::post('/post', [VisitorDetailController::class, 'visitor_post_action'])->name('visitor.action');
+		Route::delete('/delete/{id}', [VisitorDetailController::class, 'delete'])->name('visitor.delete');
+	});
 
 	// Route::group(['prefix' => 'teacherlist'], function () {
 	// 	Route::get('/', [TeacherMasterController::class, 'index'])->name('teacherlist');

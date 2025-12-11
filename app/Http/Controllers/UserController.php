@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use App\Models\FamilyMembers;
+use App\Models\LoginActivity;
 use App\Models\StudentAdmission;
 use App\Http\Requests\UserRequest;
-use App\Models\LoginActivity;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -29,8 +31,8 @@ class UserController extends Controller
     {
 
         $query = LoginActivity::with('users:id,name,user_id,role')->orderBy('logged_in_at', 'desc')->whereHas('users', function ($q) {
-                $q->where('role', 'teacher');
-            });
+            $q->where('role', 'teacher');
+        });
 
         if ($request->filled('from_date') && $request->filled('to_date')) {
             $from = Carbon::parse($request->from_date)->startOfDay();
@@ -58,7 +60,7 @@ class UserController extends Controller
     public function user_action(Request $request)
     {
         $action = $request->route()->parameter('action');
-        $students = StudentAdmission::select('id', 'student_name', 'enroll_number')->get();
+        $member = Member::select('id', 'student_name', 'enroll_number')->get();
         $getdata = [];
         $student_ids = [];
         $role = ['admin', 'teacher', 'parent'];
@@ -69,92 +71,84 @@ class UserController extends Controller
         return view('users.action', compact('getdata', 'action', 'students', 'student_ids', 'role'));
     }
 
-    //Teacher form post request
-    public function user_post_action(Request $request)
+    //Member form post request
+    public function member_post_action(Request $request)
     {
-        // dd( $request->student_id);
-        // if ($request->role === 'parent') {
-        //     $rules = [
-        //         'user_id'   => 'required|unique:users,user_id,' . $request->edit_id,
-        //         'role'       => 'required|string',
-        //         'password' => 'required|string|min:6|confirmed',
-        //     ];
-        // } else {
-        //     $rules = [
-        //         'user_id'   => 'required|unique:users,user_id,' . $request->edit_id,
-        //         'name' => 'required',
-        //         'role'       => 'required|string',
-        //         'email'   => 'required|unique:users,email,' . $request->edit_id,
-        //         'password' => 'required|string|min:6|confirmed',
-        //     ];
+        // $action = $request->route()->parameter('action');
+        $member = [];
+        $role = '';
+        $userId = 'user';
+        // $rules = [];
+
+        // if ($action == 'Edit') {
+        //     $rules['password'] = 'nullable';
         // }
 
-        $action = $request->route()->parameter('action');
-        $rules = [
-            'user_id'   => 'required|unique:users,user_id,' . $request->edit_id,
+        // if (!empty($request->mobile) && !empty($request->device_id)) {
+        //     $rules['role'] = 'nullable';
+        //     $rules['user_id'] = 'nullable';
+        // }
+        // dd($rules);
+
+        $validator = Validator::make($request->all(), [
+            // 'user_id'   => 'required|unique:users,user_id,' . $request->edit_id,
             'name' => 'required',
-            'role'       => 'required|string',
+            // 'role'       => 'required|string',
             'email'   => 'required|unique:users,email,' . $request->edit_id,
             'password' => 'required|string|min:6|confirmed',
-        ];
+            'mobile' => 'required|digits:10',
+            'device_id' => 'required',
+        ]);
 
-        if ($action == 'Edit') {
-            $rules['password'] = ['nullable'];
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation errors',
+                'errors' => $validator->errors()
+            ], 422);
         }
-        $request->validate($rules);
-        // if (isset($request->edit_id) && !empty($request->edit_id)) {
-        //     $user = User::where('id', $request->edit_id)->first();
-        // }else{
-        //     $user=new User;
-        // }
+
+        if (!empty($request->mobile) && !empty($request->device_id)) {
+            $member = Member::where('mobile', $request->mobile)->first();
+            $role = 'member';
+            $firstName = explode(' ', trim($member->name))[0];
+            $userId = $firstName . substr($member->mobile, 0, 4);
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Fill the required details",
+            ], 422);
+        }
 
         $data = [
-
-            'user_id' => $request->user_id,
-            'email' => $request->email,
+            'user_id' => $userId,
+            'email' => $member->email,
             'email_verified_at' => now(),
-            'role' => $request->role,
-            'status' => $request->status,
-            'name' => $request->name,
+            'role' => $role,
+            'name' => $member->name,
 
         ];
 
+        
         if (!empty($request->password)) {
             $data['password'] = Hash::make($request->password);
         }
-        if (!empty($request->student_id)) {
-            $studentIds = $request->student_id;
-            $student_ids = implode(',', $studentIds ?? []);
-            $data['student_id'] = $student_ids ?? '';
+        // dd($request->edit_id);
+
+        User::updateOrCreate(['id'=> $request->edit_id], $data);
+
+        $member->device_id = $request->device_id;
+        $member->save();
+
+        if (!empty($request->mobile)) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Member Created Successfully',
+            ], 201);
         }
-        // else {
-        //     $data['password'] = $user->password;
-        // }
-
-        // if ($request->role === 'parent') {
-        //     $studentIds = $request->student_id;
-        //     $familymember = FamilyMembers::whereIn('student_id', $studentIds ?? [])->first();
-
-        //     if (empty($familymember)) {
-        //         return redirect()->back()->with('error', 'First Create Student Family Member For All Selected Student...');
-        //     }
-        //     $data['name'] = $familymember->member_name ?? 'NA';
-        //     $data['email'] = $request->user_id . '@asha.com';
-        //     $student_ids = implode(',', $studentIds ?? []);
-        //     $data['student_id'] = $student_ids ?? '';
-        // } else {
-        //     $data['email'] = $request->email ?? 'NA';
-        //     $data['name'] = $request->name ?? 'NA';
-        // }
-
-        if (isset($request->edit_id) && !empty($request->edit_id)) {
-            User::where('id', $request->edit_id)->update($data);
-        } else {
-            User::Create($data);
-        }
-
-        return redirect()->route('userlist')->with('success', 'Submitted Successfully...');
+        // return redirect()->route('login')->with('success', 'Submitted Successfully...');
     }
+
 
     public function delete($id)
     {

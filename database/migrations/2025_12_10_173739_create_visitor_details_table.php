@@ -20,6 +20,9 @@ return new class extends Migration
             $table->date('date')->nullable();
             $table->integer('duration')->default(0);         
             $table->integer('max_allow_days')->default(0);
+            $table->tinyInteger('status')->default(1)->comment('1=Active, 0=Inactive');
+             $table->integer('created_by')->nullable();
+             $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

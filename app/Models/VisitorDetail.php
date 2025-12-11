@@ -17,5 +17,8 @@ class VisitorDetail extends Model
         'date',
         'duration',
         'max_allow_days',
+        'status',
+        'created_by',
+        'updated_by',
     ];
 }

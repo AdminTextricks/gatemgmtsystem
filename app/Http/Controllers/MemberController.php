@@ -14,6 +14,8 @@ class MemberController extends Controller
         return view('admin.membermaster.index', compact('data'));
     }
 
+
+    //Start Mobile Api Response
     public function checkDevice(Request $request)
     {
         $deviceId = $request->header('Device-Id');
@@ -34,9 +36,42 @@ class MemberController extends Controller
 
             return response()->json([
                 'status' => true,
-            ]);
+            ], 200);
         }
     }
+
+    public function checkPhone(Request $request)
+    {
+        $phoneNumber = $request->input('phone_number');
+        if (!$phoneNumber) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Phone Number is missing'
+            ], 400);
+        } else {
+
+            $memberdetails = Member::where('mobile', $phoneNumber)->first();
+            // dd($memberdetails);          
+
+            if (empty($memberdetails)) {
+                return response()->json([
+                    "status" => false,
+                ], 400);
+            } else {
+                $data = [
+                    'email' => $memberdetails->email ?? '',
+                    'name' => $memberdetails->name ?? '',
+                ];
+                return response()->json([
+                    'status' => true,
+                    "member_data" => $data,
+                ], 201);
+            }
+        }
+    }
+
+    //End Mobile Api Response
+
 
     // update user(member) status 
     // public function updatestatus(Request $request, $id = null)
@@ -77,8 +112,8 @@ class MemberController extends Controller
         $rules = [
             'uid'   => 'required|unique:members,uid,' . $request->edit_id,
             'name' => 'required',
-            'email'      => 'nullable',
-            'mobile'       => 'required|numeric',
+            'email'      => 'nullable|unique:members,email'. $request->edit_id,
+            'mobile'       => 'required|numeric|unique:members,mobile'. $request->edit_id,
             'status'       => 'required|numeric',
 
         ];
@@ -105,19 +140,8 @@ class MemberController extends Controller
 
     public function delete($id)
     {
-
-        $Member = Member::findOrFail($id);
-        $user = User::where('user_id', $Member->teacher_id)->first();
-        if (!empty($Member->document)) {
-            $filePath = public_path($Member->document);
-            if (file_exists($filePath)) {
-                @unlink($filePath);
-            }
-        }
-
-        $Member->delete();
-        $user->delete();
-
-        return response()->json(['success' => true, 'message' => 'Teacher deleted successfully.']);
+        $VisitorDetail = Member::findOrFail($id);
+        $VisitorDetail->delete();
+        return response()->json(['success' => true, 'message' => 'Member deleted successfully.']);
     }
 }

@@ -22,8 +22,7 @@
                 </a>
             </li>
             {{-- @endif --}}
-            <li
-                class="{{ in_array($elementActive, ['user', 'memberlist']) ? 'active' : '' }}">
+            <li class="{{ in_array($elementActive, ['user', 'visitorlist']) ? 'active' : '' }}">
                 <a data-toggle="collapse" aria-expanded="true" href="#membermodules">
                     <i class="nc-icon"><img src="{{ asset('paper/img/student_icon.png') }}"></i>
                     <p>
@@ -33,24 +32,23 @@
                 </a>
                 <div class="collapse" id="membermodules">
                     <ul class="nav">
-                        
+
                         @if ($user->role === 'admin' || $user->role === 'member')
-                            <li class="{{ $elementActive == 'memberlist' ? 'active' : '' }}">
-                                <a href="{{ route('memberlist') }}">
-                                    <span class="sidebar-mini-icon">{{ __('MD') }}</span>
-                                    <span class="sidebar-normal">{{ __(' Member Details ') }}</span>
+                            <li class="{{ $elementActive == 'visitorlist' ? 'active' : '' }}">
+                                <a href="{{ route('visitorlist') }}">
+                                    <span class="sidebar-mini-icon">{{ __('VD') }}</span>
+                                    <span class="sidebar-normal">{{ __(' Visitor Details ') }}</span>
                                 </a>
                             </li>
-                           
                         @endif
-                       
+
                     </ul>
                 </div>
             </li>
 
             {{-- Start Gate Admin module --}}
             @if ($user->role === 'admin' || $user->role === 'gateadmin')
-                <li class="{{ in_array($elementActive, ['user',]) ? 'active' : '' }}">
+                <li class="{{ in_array($elementActive, ['user']) ? 'active' : '' }}">
                     <a data-toggle="collapse" aria-expanded="true" href="#gateadminmodule">
                         <i class="nc-icon nc-money-coins">
                             {{-- <img src="{{ asset('paper/img/student_icon.png') }}"> --}}
@@ -77,25 +75,23 @@
 
             @if ($user->role === 'admin' || $user->role === 'teacher')
                 <li
-                    class="{{ in_array($elementActive, ['userlist', 'notifications', 'timetablelist', 'login_activity', 'classlist', 'teacherlist', 'disabilitylist', 'citylist', 'statelist', 'therapistlist', 'equipmentlist', 'studentFLY', 'occupationlist']) ? 'active' : '' }}">
+                    class="{{ in_array($elementActive, ['userlist', 'memberlist', 'timetablelist', 'login_activity', 'classlist', 'teacherlist', 'disabilitylist', 'citylist', 'statelist', 'therapistlist', 'equipmentlist', 'studentFLY', 'occupationlist']) ? 'active' : '' }}">
                     <a data-toggle="collapse" aria-expanded="true" href="#adminmodules">
                         <i class="nc-icon nc-circle-10"></i>
                         <p>
-                                {{ __('Admin Module') }}
+                            {{ __('Admin Module') }}
                             <b class="caret"></b>
                         </p>
                     </a>
                     <div class="collapse" id="adminmodules">
                         <ul class="nav">
                             @if ($user->role === 'admin')
-                                
-                                {{-- <li class="{{ $elementActive == 'userlist' ? 'active' : '' }}">
-                                    <a href="{{ route('userlist') }}">
-                                        <span class="sidebar-mini-icon">{{ __('PA') }}</span>
-                                        <span class="sidebar-normal">{{ __(' Parent Accounts') }}</span>
+                                <li class="{{ $elementActive == 'memberlist' ? 'active' : '' }}">
+                                    <a href="{{ route('memberlist') }}">
+                                        <span class="sidebar-mini-icon">{{ __('MD') }}</span>
+                                        <span class="sidebar-normal">{{ __(' Member Details ') }}</span>
                                     </a>
-                                </li> --}}
-                                
+                                </li>
                             @endif
                         </ul>
                     </div>

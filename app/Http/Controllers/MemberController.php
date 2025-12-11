@@ -128,6 +128,7 @@ class MemberController extends Controller
             'device_id' => $request->device_id,
             'status' => $request->status,
         ];
+        
 
         Member::updateOrCreate(
             ['id' => $request->edit_id],

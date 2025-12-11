@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Member;
+use App\Models\OtpCode;
 use Illuminate\Http\Request;
 use App\Models\FamilyMembers;
 use App\Models\LoginActivity;
 use App\Models\StudentAdmission;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -75,11 +77,7 @@ class UserController extends Controller
     public function member_post_action(Request $request)
     {
         // $action = $request->route()->parameter('action');
-        $member = [];
-        $role = '';
         $userId = 'user';
-        // $rules = [];
-
         // if ($action == 'Edit') {
         //     $rules['password'] = 'nullable';
         // }
@@ -92,10 +90,10 @@ class UserController extends Controller
 
         $validator = Validator::make($request->all(), [
             // 'user_id'   => 'required|unique:users,user_id,' . $request->edit_id,
-            'name' => 'required',
+            // 'name' => 'required',
             // 'role'       => 'required|string',
             'email'   => 'required|unique:users,email,' . $request->edit_id,
-            'password' => 'required|string|min:6|confirmed',
+            // 'password' => 'required|string|min:6|confirmed',
             'mobile' => 'required|digits:10',
         ]);
 
@@ -106,45 +104,50 @@ class UserController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-        
+
         if (!empty($request->mobile) && !empty($request->header('Device-Id'))) {
             $member = Member::where('mobile', $request->mobile)->first();
             $role = 'member';
             $firstName = explode(' ', trim($member->name))[0];
             $userId = $firstName . substr($member->mobile, 0, 4);
-        } else {
-            return response()->json([
-                "status" => false,
-                "message" => "Fill the required details",
-            ], 422);
+        } 
+        // else {
+        //     return response()->json([
+        //         "status" => false,
+        //         "message" => "Fill the required details",
+        //     ], 422);
+        // }
+
+
+        //Send OTP on user email id
+
+        $otp = rand(100000, 999999);
+
+        if(!empty($member->email)){
+            $otpData=OtpCode::create([
+            'user_id'   => $userId,
+            'otp'       => $otp,
+            'email'       => $member->email,
+            'status'       => 'pending',
+            'expires_at' => Carbon::now()->addMinutes(5),
+        ]);
         }
 
-        $data = [
-            'user_id' => $userId,
-            'email' => $member->email,
-            'email_verified_at' => now(),
-            'role' => $role,
-            'name' => $member->name,
-
-        ];
-
-        
-        if (!empty($request->password)) {
-            $data['password'] = Hash::make($request->password);
+        // Send email
+        if (!empty($otpData)) {
+            Mail::raw("Your OTP is: $otp", function ($message) use ($member) {
+                $message->to($member->email)
+                    ->subject('Email Verification OTP');
+            });
         }
-        // dd($request->edit_id);
 
-        User::updateOrCreate(['id'=> $request->edit_id], $data);
 
-        $member->device_id = $request->header('Device-Id');
-        $member->save();
+        return response()->json([
+            'status'  => true,
+            'message' => 'Your OTP sent to email.',
+        ]);
 
-        if (!empty($request->mobile)) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Member Created Successfully',
-            ], 201);
-        }
+     
         // return redirect()->route('login')->with('success', 'Submitted Successfully...');
     }
 

@@ -73,7 +73,7 @@
             {{-- End Gate Admin module --}}
 
 
-            @if ($user->role === 'admin' || $user->role === 'teacher')
+            @if ($user->role === 'admin' )
                 <li
                     class="{{ in_array($elementActive, ['userlist', 'memberlist', 'timetablelist', 'login_activity', 'classlist', 'teacherlist', 'disabilitylist', 'citylist', 'statelist', 'therapistlist', 'equipmentlist', 'studentFLY', 'occupationlist']) ? 'active' : '' }}">
                     <a data-toggle="collapse" aria-expanded="true" href="#adminmodules">
@@ -90,6 +90,12 @@
                                     <a href="{{ route('memberlist') }}">
                                         <span class="sidebar-mini-icon">{{ __('MD') }}</span>
                                         <span class="sidebar-normal">{{ __(' Member Details ') }}</span>
+                                    </a>
+                                </li>
+                                <li class="{{ $elementActive == 'userlist' ? 'active' : '' }}">
+                                    <a href="{{ route('userlist') }}">
+                                        <span class="sidebar-mini-icon">{{ __('UD') }}</span>
+                                        <span class="sidebar-normal">{{ __(' User Details ') }}</span>
                                     </a>
                                 </li>
                             @endif

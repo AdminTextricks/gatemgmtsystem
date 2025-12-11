@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\OtpCodeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,3 +24,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/check-device', [MemberController::class, 'checkDevice'])->name('check_device');
 Route::post('/check-phone-exist', [MemberController::class, 'checkPhone'])->name('check_phone');
 Route::post('/link-device', [UserController::class, 'member_post_action'])->name('link_device');
+Route::post('/verify-otp', [OtpCodeController::class, 'verifyMobileByOTP'])->name('verifyOtp');

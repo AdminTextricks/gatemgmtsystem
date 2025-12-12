@@ -5,21 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class VisitorDetail extends Model
+class GateAdmin extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'gate_admin_id',
         'name',
         'email',
         'mobile',
-        'uid',
-        'date',
-        'duration',
-        'max_allow_days',
+        'device_id',
+        'gate_no',
+        'shift',
+        'email_verified_at',
         'status',
-        'visitor_key',
-        'created_by',
-        'updated_by',
     ];
 }

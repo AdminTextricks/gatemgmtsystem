@@ -19,9 +19,9 @@ return new class extends Migration
             $table->timestamp('expires_at')->nullable();
             $table->enum('status', ['pending', 'used'])->default('pending');
             $table->timestamps();
-            $table->foreign('user_id')
-                ->references('id')->on('users')
-                ->onDelete('cascade');
+            // $table->foreign('user_id')
+            //     ->references('id')->on('users')
+            //     ->onDelete('cascade');
         });
     }
 

@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Auth\AuthenticatesMobileUsers;
 
 class LoginController extends Controller
 {
@@ -19,6 +24,43 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
+    // use AuthenticatesMobileUsers;
+
+    public function apiLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'login'    => 'required',
+            'password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => false,
+                'message' => "Validation errors",
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+
+        $field = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'user_id';
+        $user = User::where($field, $request->login)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'status'  => false,
+                'message' => "Invalid login credentials"
+            ], 401);
+        }
+
+        $token = $user->createToken("mobile-app-token")->plainTextToken;
+
+        return response()->json([
+            'status'  => true,
+            'message' => "Login successful",
+            'token'   => $token,
+            'user'    => $user,
+        ], 200);
+    }
+
 
     /**
      * Where to redirect users after login.

@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\GateAdminController;
 use App\Http\Controllers\Student\StudentAdmissionController;
 use App\Http\Controllers\VisitorDetailController;
 
@@ -44,6 +45,13 @@ Route::group(['dashboard', 'middleware' => 'auth'], function () {
 	Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
 
+	Route::group(['prefix' => 'gateadminlist'], function () {
+		Route::get('/', [GateAdminController::class, 'index'])->name('gateadminlist');
+		Route::get('/{action}/{id?}', [GateAdminController::class, 'gateadmin_action'])->name('gateadmin_action');
+		Route::post('/post', [GateAdminController::class, 'gateadmin_post_action'])->name('gateadmin.action');
+		Route::delete('/delete/{id}', [GateAdminController::class, 'delete'])->name('gateadmin.delete');
+	});
+
 	Route::group(['prefix' => 'memberlist'], function () {
 		Route::get('/', [MemberController::class, 'index'])->name('memberlist');
 		Route::get('/{action}/{id?}', [MemberController::class, 'member_action'])->name('member_action');
@@ -51,20 +59,18 @@ Route::group(['dashboard', 'middleware' => 'auth'], function () {
 		Route::delete('/delete/{id}', [MemberController::class, 'delete'])->name('member.delete');
 	});
 
-	Route::group(['prefix' => 'visitorlist'], function () {
-		Route::get('/', [VisitorDetailController::class, 'index'])->name('visitorlist');
-		Route::get('/{action}/{id?}', [VisitorDetailController::class, 'visitor_action'])->name('visitor_action');
-		// Route::get('/updatestatus', [VisitorDetailController::class, 'updatestatus'])->name('update_status');
-		Route::post('/post', [VisitorDetailController::class, 'visitor_post_action'])->name('visitor.action');
-		Route::delete('/delete/{id}', [VisitorDetailController::class, 'delete'])->name('visitor.delete');
+	Route::group(['prefix' => 'guestlist'], function () {
+		Route::get('/', [VisitorDetailController::class, 'index'])->name('guestlist');
+		Route::get('/{action}/{id?}', [VisitorDetailController::class, 'guest_action'])->name('guest_action');
+		Route::post('/post', [VisitorDetailController::class, 'guest_post_action'])->name('guest.action');
+		Route::delete('/delete/{id}', [VisitorDetailController::class, 'delete'])->name('guest.delete');
 	});
 
-	// Route::group(['prefix' => 'teacherlist'], function () {
-	// 	Route::get('/', [TeacherMasterController::class, 'index'])->name('teacherlist');
-	// 	Route::get('/{action}/{id?}', [TeacherMasterController::class, 'teacher_action'])->name('teacher_action');
-	// 	Route::post('/post', [TeacherMasterController::class, 'teacher_post_action'])->name('teacher.action');
-	// 	Route::delete('/delete/{id}', [TeacherMasterController::class, 'delete'])->name('teacher.delete');
-	// });
+	Route::group(['prefix' => 'visitorlist'], function () {
+		Route::get('/', [VisitorDetailController::class, 'index'])->name('visitorlist');
+		Route::get('/updatestatus', [VisitorDetailController::class, 'updatestatus'])->name('update_status');
+		
+	});
 
 
 	// Route::group(['prefix' => 'citylist'], function () {

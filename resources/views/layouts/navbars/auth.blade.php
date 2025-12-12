@@ -22,7 +22,7 @@
                 </a>
             </li>
             {{-- @endif --}}
-            <li class="{{ in_array($elementActive, ['user', 'visitorlist']) ? 'active' : '' }}">
+            <li class="{{ in_array($elementActive, ['user', 'guestlist']) ? 'active' : '' }}">
                 <a data-toggle="collapse" aria-expanded="true" href="#membermodules">
                     <i class="nc-icon"><img src="{{ asset('paper/img/student_icon.png') }}"></i>
                     <p>
@@ -34,10 +34,10 @@
                     <ul class="nav">
 
                         @if ($user->role === 'admin' || $user->role === 'member')
-                            <li class="{{ $elementActive == 'visitorlist' ? 'active' : '' }}">
-                                <a href="{{ route('visitorlist') }}">
-                                    <span class="sidebar-mini-icon">{{ __('VD') }}</span>
-                                    <span class="sidebar-normal">{{ __(' Visitor Details ') }}</span>
+                            <li class="{{ $elementActive == 'guestlist' ? 'active' : '' }}">
+                                <a href="{{ route('guestlist') }}">
+                                    <span class="sidebar-mini-icon">{{ __('GD') }}</span>
+                                    <span class="sidebar-normal">{{ __(' Guest Details ') }}</span>
                                 </a>
                             </li>
                         @endif
@@ -48,7 +48,7 @@
 
             {{-- Start Gate Admin module --}}
             @if ($user->role === 'admin' || $user->role === 'gateadmin')
-                <li class="{{ in_array($elementActive, ['user']) ? 'active' : '' }}">
+                <li class="{{ in_array($elementActive, ['user', 'visitorlist']) ? 'active' : '' }}">
                     <a data-toggle="collapse" aria-expanded="true" href="#gateadminmodule">
                         <i class="nc-icon nc-money-coins">
                             {{-- <img src="{{ asset('paper/img/student_icon.png') }}"> --}}
@@ -60,12 +60,12 @@
                     </a>
                     <div class="collapse" id="gateadminmodule">
                         <ul class="nav">
-                            {{-- <li class="{{ $elementActive == 'pendingfee' ? 'active' : '' }}">
-                                <a href="{{ route('pendingfeelist') }}">
-                                    <span class="sidebar-mini-icon">{{ __('PF') }}</span>
-                                    <span class="sidebar-normal">{{ __(' Student Fee Details') }}</span>
+                            <li class="{{ $elementActive == 'visitorlist' ? 'active' : '' }}">
+                                <a href="{{ route('visitorlist') }}">
+                                    <span class="sidebar-mini-icon">{{ __('VL') }}</span>
+                                    <span class="sidebar-normal">{{ __('Visitor List') }}</span>
                                 </a>
-                            </li> --}}
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -75,7 +75,7 @@
 
             @if ($user->role === 'admin' )
                 <li
-                    class="{{ in_array($elementActive, ['userlist', 'memberlist', 'timetablelist', 'login_activity', 'classlist', 'teacherlist', 'disabilitylist', 'citylist', 'statelist', 'therapistlist', 'equipmentlist', 'studentFLY', 'occupationlist']) ? 'active' : '' }}">
+                    class="{{ in_array($elementActive, ['userlist', 'memberlist', 'gateadminlist']) ? 'active' : '' }}">
                     <a data-toggle="collapse" aria-expanded="true" href="#adminmodules">
                         <i class="nc-icon nc-circle-10"></i>
                         <p>
@@ -92,12 +92,19 @@
                                         <span class="sidebar-normal">{{ __(' Member Details ') }}</span>
                                     </a>
                                 </li>
-                                <li class="{{ $elementActive == 'userlist' ? 'active' : '' }}">
+                                <li class="{{ $elementActive == 'gateadminlist' ? 'active' : '' }}">
+                                    <a href="{{ route('gateadminlist') }}">
+                                        <span class="sidebar-mini-icon">{{ __('GA') }}</span>
+                                        <span class="sidebar-normal">{{ __(' Gate Admin ') }}</span>
+                                    </a>
+                                </li>
+                                {{-- <li class="{{ $elementActive == 'userlist' ? 'active' : '' }}">
                                     <a href="{{ route('userlist') }}">
+                                    <a href="">
                                         <span class="sidebar-mini-icon">{{ __('UD') }}</span>
                                         <span class="sidebar-normal">{{ __(' User Details ') }}</span>
                                     </a>
-                                </li>
+                                </li> --}}
                             @endif
                         </ul>
                     </div>

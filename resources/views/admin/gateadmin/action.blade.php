@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'class' => '',
-    'elementActive' => 'guestlist',
+    'elementActive' => 'memberlist',
 ])
 @section('content')
     <style>
@@ -12,13 +12,13 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="{{ route('guestlist') }}" class="btn btn-outline-secondary btn-sm">
+                    <a href="{{ route('memberlist') }}" class="btn btn-outline-secondary btn-sm">
                         <i class="fa fa-arrow-left"></i> Back
                     </a>
-                    <p class="h6"><i class="fa fa-user"></i>&nbsp;&nbsp;{{ $action }} Visitor Details</p>
+                    <p class="h6"><i class="fa fa-user"></i>&nbsp;&nbsp;{{ $action }} Member Details</p>
                 </div>
                 <hr>
-                <form action="{{ route('guest.action', ['action' => $action]) }}" method="post"
+                <form action="{{ route('member.action', ['action' => $action]) }}" method="post"
                     enctype="multipart/form-data">
                     @csrf
                     <div class="row">
@@ -66,12 +66,28 @@
                                 <label for="class_id">Unique Id<span style="color:red">*</span></label>
                                 <input type="text" class="form-control" id="uid" name="uid"
                                     placeholder="Unique Id"
-                                    value="{{ old('uid', isset($getdata->uid) ? $getdata->uid : '') }}" required />
+                                    value="{{ old('uid', isset($getdata->uid) ? $getdata->uid : '') }}"
+                                    required />
                                 @error('uid')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="device_id">Device Id</label>
+                                <input type="text" class="form-control" id="device_id" name="device_id"
+                                    placeholder="Device Id"
+                                    value="{{ old('uid', isset($getdata->device_id) ? $getdata->device_id : '') }}"
+                                     />
+                                @error('device_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="status">STATUS<span style="color:red">*</span></label>
@@ -84,41 +100,6 @@
                                     </option>
                                 </select>
                                 @error('document')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="date">Date</label>
-                                <input type="date" class="form-control" id="date" name="date"
-                                    placeholder="Enter Visit Date"
-                                    value="{{ old('date', isset($getdata->date) ? $getdata->date : '') }}" />
-                                @error('date')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="duration">Duration</label>
-                                <input type="text" class="form-control" id="date_range" name="duration" 
-                                    placeholder="Select Visit Duration"
-                                    value="{{ old('duration', isset($getdata->duration) ? $getdata->duration : '') }}" />
-                                @error('duration')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="duration">Maximum Allows Days</label>
-                                <input type="number" class="form-control" id="max_allow_days" name="max_allow_days" 
-                                    placeholder="Enter Maximum Allows Days" min="0"
-                                    value="{{ old('max_allow_days', isset($getdata->max_allow_days) ? $getdata->max_allow_days : '') }}" />
-                                @error('max_allow_days')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'class' => '',
-    'elementActive' => 'visitorlist',
+    'elementActive' => 'guestlist',
 ])
 
 @section('content')
@@ -11,7 +11,7 @@
                     <div class="card-header">
                         <div class=" d-flex justify-content-between align-items-center">
                             <h6 class="card-title mb-0"><i class="nc-icon nc-tile-56"></i> Visitor List</h6>
-                            <a href="{{ route('visitor_action', ['action' => 'Add']) }}"
+                            <a href="{{ route('guest_action', ['action' => 'Add']) }}"
                                 class="btn btn-sm btn-outline-info pull-right"><i class="fa fa-plus"></i>&nbsp;Add New
                                 Visitor</a>
 
@@ -37,9 +37,9 @@
                                         <th>UNIQUE ID</th>
                                         <th>DATE</th>
                                         <th>DURATION</th>
-                                        <th>MAXIMUM ALLOW DAYS</th>
+                                        <th>ALLOW DAYS</th>
                                         <th>STATUS</th>
-                                        <th class="not-export">ACTION</th>
+                                        {{-- <th class="not-export">ACTION</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -53,24 +53,7 @@
                                             <td>{{ $getdata->date   ?? 'NA' }}</td>
                                             <td>{{ $getdata->duration   ?? 'NA' }}</td>
                                             <td>{{ $getdata->max_allow_days   ?? 'NA' }}</td>
-                                            <td><button type="button"
-                                                    class="btn btn-primary border-0 p-1 text-capitalize statusBtn"
-                                                    data-toggle="modal" data-target="#myModal"
-                                                    data-id="{{ $getdata->id }}" data-status="{{ $getdata->status }}">
-                                                    {{ $getdata->status ? 'Active' : 'InActive' }}</button></td>
-                                            <td class="not-export">
-                                                <a href="{{ route('visitor_action', ['action' => 'Edit', 'id' => $getdata->id]) }}"
-                                                    class="text-primary">
-                                                    <i class="fa fa-edit
-                                            "></i>
-                                                </a>&nbsp;
-
-                                                <a href="javascript:void(0)" class="text-danger"
-                                                    onclick="deleteVisitor('{{ route('visitor.delete', $getdata->id) }}')">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
-
-                                            </td>
+                                            
                                         </tr>
                                     @endforeach
 

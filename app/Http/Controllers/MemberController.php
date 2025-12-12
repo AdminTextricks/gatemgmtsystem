@@ -112,8 +112,8 @@ class MemberController extends Controller
         $rules = [
             'uid'   => 'required|unique:members,uid,' . $request->edit_id,
             'name' => 'required',
-            'email'      => 'nullable|unique:members,email'. $request->edit_id,
-            'mobile'       => 'required|numeric|unique:members,mobile'. $request->edit_id,
+            'email'      => 'nullable|unique:members,email,'. $request->edit_id,
+            'mobile'       => 'required|numeric|unique:members,mobile,'. $request->edit_id,
             'status'       => 'required|numeric',
 
         ];

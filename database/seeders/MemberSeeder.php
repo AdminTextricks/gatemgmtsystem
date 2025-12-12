@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Member;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,13 +13,13 @@ class MemberSeeder extends Seeder
      */
     public function run(): void
     {
-        //  MemberDetail::create([
-        //     'name'      => 'Vivek Singh',
-        //     'email'     => 'vivek@gmail.com',
-        //     'phone'     => '9876543210',
-        //     'uid'       => 'UID123456',
-        //     'device_id' => 'DEVICE98765',
-        // ]);
+         Member::create([
+            'name'      => 'Vivek Singh',
+            'email'     => 'viveksingh@textricks.com',
+            'phone'     => '8039421087',
+            'uid'       => 'UID123456',
+            'device_id' => 'DEVICE98765',
+        ]);
 
     
     }

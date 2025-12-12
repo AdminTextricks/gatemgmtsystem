@@ -107,6 +107,12 @@ class UserController extends Controller
 
         if (!empty($request->mobile) && !empty($request->header('Device-Id'))) {
             $member = Member::where('mobile', $request->mobile)->first();
+            if(empty($member)){
+                 return response()->json([
+                "status" => false,
+                "message" => "User not found",
+            ], 422);
+            }
             $role = 'member';
             $firstName = explode(' ', trim($member->name))[0];
             $userId = $firstName . substr($member->mobile, 0, 4);

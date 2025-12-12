@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'class' => '',
-    'elementActive' => 'guestlist',
+    'elementActive' => 'visitorlist',
 ])
 
 @section('content')
@@ -11,7 +11,7 @@
                     <div class="card-header">
                         <div class=" d-flex justify-content-between align-items-center">
                             <h6 class="card-title mb-0"><i class="nc-icon nc-tile-56"></i> Visitor List</h6>
-                            <a href="{{ route('guest_action', ['action' => 'Add']) }}"
+                            <a href="{{ route('visitor_action', ['action' => 'Add']) }}"
                                 class="btn btn-sm btn-outline-info pull-right"><i class="fa fa-plus"></i>&nbsp;Add New
                                 Visitor</a>
 
@@ -36,9 +36,10 @@
                                         <th>MOBILE</th>
                                         <th>UNIQUE ID</th>
                                         <th>DATE</th>
-                                        <th>DURATION</th>
+                                        {{-- <th>DURATION</th> --}}
                                         <th>ALLOW DAYS</th>
                                         <th>STATUS</th>
+                                        <th>ACTION</th>
                                         {{-- <th class="not-export">ACTION</th> --}}
                                     </tr>
                                 </thead>
@@ -48,12 +49,29 @@
                                         <tr>
                                             <td>{{ $getdata->name ?? 'NA' }}</td>
                                             <td>{{ $getdata->email ?? 'NA' }}</td>
-                                            <td>{{ $getdata->mobile  ?? 'NA' }}</td>
-                                            <td>{{ $getdata->uid  ?? 'NA' }}</td>
-                                            <td>{{ $getdata->date   ?? 'NA' }}</td>
-                                            <td>{{ $getdata->duration   ?? 'NA' }}</td>
-                                            <td>{{ $getdata->max_allow_days   ?? 'NA' }}</td>
-                                            
+                                            <td>{{ $getdata->mobile ?? 'NA' }}</td>
+                                            <td>{{ $getdata->uid ?? 'NA' }}</td>
+                                            <td>{{ $getdata->date ?? 'NA' }}</td>
+                                            {{-- <td>{{ $getdata->duration ?? 'NA' }}</td> --}}
+                                            <td>{{ $getdata->max_allow_days ?? 'NA' }}</td>
+                                            <td><button type="button"
+                                                    class="btn btn-primary border-0 p-1 text-capitalize statusBtn"
+                                                    data-toggle="modal" data-target="#myModal" data-id="{{ $getdata->id }}"
+                                                    data-status="{{ $getdata->status }}">
+                                                    {{ $getdata->request_status->name }}</button></td>
+                                            <td class="not-export">
+                                                <a href="{{ route('visitor_action', ['action' => 'Edit', 'id' => $getdata->id]) }}"
+                                                    class="text-primary">
+                                                    <i class="fa fa-edit
+                                            "></i>
+                                                </a>&nbsp;
+
+                                                <a href="javascript:void(0)" class="text-danger"
+                                                    onclick="deleteVisitor('{{ route('guest.delete', $getdata->id) }}')">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+
+                                            </td>
                                         </tr>
                                     @endforeach
 
@@ -80,12 +98,15 @@
                         <form>
                             @csrf
                             <select name="status" id="status" class="form-control p-2">
-                                <option value="1" {{ ($userdata->status ?? '') == 1 ? 'selected' : '' }}>
-                                    Active
-                                </option>
-                                <option value="0" {{ ($userdata->status ?? '') == 0 ? 'selected' : '' }}>
-                                    Inactive
-                                </option>
+                                @php
+                                    $statuses = ['Pending', 'Approved', 'Checked In', 'Checked Out', 'Rejected'];
+                                @endphp
+                                @foreach ($statuses as $index => $status)
+                                    <option value={{ $index + 1 }}
+                                        {{ ($userdata->status ?? '') == $index + 1 ? 'selected' : '' }}>
+                                        {{ Str::title($status) }}
+                                    </option>
+                                @endforeach
                             </select>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary update_status">Update</button>
@@ -133,7 +154,7 @@
                 });
             }
         </script>
-       
+
         <script>
             let visitorId = null;
             $('#myModal').on('show.bs.modal', function(event) {
@@ -146,8 +167,8 @@
             $(document).on('click', '.update_status', function() {
                 let status = $('#status').val();
                 $.ajax({
-                    url: "{{ url('visitorlist/updatestatus') }}/" + teacherId,
-                    type: 'post',
+                    url: "{{ url('visitorlist/updatestatus') }}/" + visitorId,
+                    type: 'patch',
                     data: {
                         _token: '{{ csrf_token() }}',
                         status: status,

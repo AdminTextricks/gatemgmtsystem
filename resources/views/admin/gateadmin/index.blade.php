@@ -10,10 +10,10 @@
                 <div class="card">
                     <div class="card-header">
                         <div class=" d-flex justify-content-between align-items-center">
-                            <h6 class="card-title mb-0"><i class="nc-icon nc-tile-56"></i> MemberList</h6>
+                            <h6 class="card-title mb-0"><i class="nc-icon nc-tile-56"></i> Gate Admin List</h6>
                             <a href="{{ route('gateadmin_action', ['action' => 'Add']) }}"
                                 class="btn btn-sm btn-outline-info pull-right"><i class="fa fa-plus"></i>&nbsp;Add New
-                                Member</a>
+                                Gate Admin</a>
 
                         </div>
                         <hr>

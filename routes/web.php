@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\GateAdminController;
+use App\Http\Controllers\GuestDetailsController;
 use App\Http\Controllers\Student\StudentAdmissionController;
 use App\Http\Controllers\VisitorDetailController;
 
@@ -60,16 +61,19 @@ Route::group(['dashboard', 'middleware' => 'auth'], function () {
 	});
 
 	Route::group(['prefix' => 'guestlist'], function () {
-		Route::get('/', [VisitorDetailController::class, 'index'])->name('guestlist');
-		Route::get('/{action}/{id?}', [VisitorDetailController::class, 'guest_action'])->name('guest_action');
-		Route::post('/post', [VisitorDetailController::class, 'guest_post_action'])->name('guest.action');
-		Route::delete('/delete/{id}', [VisitorDetailController::class, 'delete'])->name('guest.delete');
+		Route::get('/', [GuestDetailsController::class, 'index'])->name('guestlist');
+		Route::get('/{action}/{id?}', [GuestDetailsController::class, 'guest_action'])->name('guest_action');
+		Route::post('/post', [GuestDetailsController::class, 'guest_post_action'])->name('guest.action');
+		Route::patch('/updatestatus/{id}', [GuestDetailsController::class, 'updatestatus'])->name('update_status');
+		Route::delete('/delete/{id}', [GuestDetailsController::class, 'delete'])->name('guest.delete');
 	});
 
 	Route::group(['prefix' => 'visitorlist'], function () {
 		Route::get('/', [VisitorDetailController::class, 'index'])->name('visitorlist');
-		Route::get('/updatestatus', [VisitorDetailController::class, 'updatestatus'])->name('update_status');
-		
+		Route::patch('/updatestatus/{id}', [VisitorDetailController::class, 'updatestatus'])->name('update_visitor_status');
+		Route::get('/{action}/{id?}', [VisitorDetailController::class, 'visitor_action'])->name('visitor_action');
+		Route::post('/post', [VisitorDetailController::class, 'visitor_post_action'])->name('visitor.action');
+		Route::delete('/delete/{id}', [VisitorDetailController::class, 'delete'])->name('visitor.delete');
 	});
 
 

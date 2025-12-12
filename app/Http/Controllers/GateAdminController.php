@@ -93,7 +93,7 @@ class GateAdminController extends Controller
                 "status"=>$gate_admin->status,
             ];
 
-            User::updateOrCreate(['id'=>$request->edit_id], $userdata);
+           $user=User::updateOrCreate(['id'=>$request->edit_id], $userdata);
             
         }
 

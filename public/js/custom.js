@@ -1,7 +1,7 @@
 {
     $("#date_range").daterangepicker({
         autoUpdateInput: false,
-        maxDate: moment(),
+        maxDate: moment().add(6, 'days'),
         locale: {
             cancelLabel: "Clear",
         },
@@ -119,11 +119,22 @@
 
 {
     const memberModules = document.getElementById("membermodules");
-    console.log(memberModules);
+    // console.log(memberModules);
     if (memberModules) {
         const activeItem = memberModules.querySelector(".nav > li.active");
         if (activeItem) {
             memberModules.classList.add("show");
+        }
+    }
+}
+
+{
+    const gateAdminModules = document.getElementById("gateadminmodule");
+    // console.log(gateAdminModules);
+    if (gateAdminModules) {
+        const activeItem = gateAdminModules.querySelector(".nav > li.active");
+        if (activeItem) {
+            gateAdminModules.classList.add("show");
         }
     }
 }

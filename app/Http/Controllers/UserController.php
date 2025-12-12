@@ -29,22 +29,22 @@ class UserController extends Controller
         return view('users.index', compact('data'));
     }
 
-    public function login_activity(Request $request, User $model)
-    {
+    // public function login_activity(Request $request, User $model)
+    // {
 
-        $query = LoginActivity::with('users:id,name,user_id,role')->orderBy('logged_in_at', 'desc')->whereHas('users', function ($q) {
-            $q->where('role', 'teacher');
-        });
+    //     $query = LoginActivity::with('users:id,name,user_id,role')->orderBy('logged_in_at', 'desc')->whereHas('users', function ($q) {
+    //         $q->where('role', 'teacher');
+    //     });
 
-        if ($request->filled('from_date') && $request->filled('to_date')) {
-            $from = Carbon::parse($request->from_date)->startOfDay();
-            $to   = Carbon::parse($request->to_date)->endOfDay();
-            $query->whereBetween('logged_in_at', [$from, $to]);
-        }
-        $data = $query->get();
+    //     if ($request->filled('from_date') && $request->filled('to_date')) {
+    //         $from = Carbon::parse($request->from_date)->startOfDay();
+    //         $to   = Carbon::parse($request->to_date)->endOfDay();
+    //         $query->whereBetween('logged_in_at', [$from, $to]);
+    //     }
+    //     $data = $query->get();
 
-        return view('users.login_activity', compact('data'));
-    }
+    //     return view('users.login_activity', compact('data'));
+    // }
 
     public function updatestatus(Request $request, $id = null)
     {

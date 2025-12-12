@@ -17,12 +17,15 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('mobile');
             $table->string('uid')->unique();
+            $table->string('block_no')->nullable();
+            $table->string('flat_no')->nullable();
             $table->date('date')->nullable();
-            $table->string('duration');
+            $table->string('duration')->nullable();
             $table->integer('max_allow_days')->default(0);
-            $table->tinyInteger('status')->default(1)->comment('1=Active, 0=Inactive');
+            $table->tinyInteger('status')->default(1);
             $table->string('visitor_key')->nullable();
             $table->integer('created_by')->nullable();
+            $table->integer('created_for')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();
         });

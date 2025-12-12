@@ -15,7 +15,7 @@
                     <a href="{{ route('guestlist') }}" class="btn btn-outline-secondary btn-sm">
                         <i class="fa fa-arrow-left"></i> Back
                     </a>
-                    <p class="h6"><i class="fa fa-user"></i>&nbsp;&nbsp;{{ $action }} Visitor Details</p>
+                    <p class="h6"><i class="fa fa-user"></i>&nbsp;&nbsp;{{ $action }} Guest Details</p>
                 </div>
                 <hr>
                 <form action="{{ route('guest.action', ['action' => $action]) }}" method="post"
@@ -25,7 +25,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="mobile">NAME<span style="color:red">*</span></label>
+                                <label for="name">NAME<span style="color:red">*</span></label>
                                 <input type="text" class="form-control" id="name" name="name"
                                     placeholder="Member Name"
                                     value="{{ old('name', isset($getdata->name) ? $getdata->name : '') }}" required />
@@ -63,7 +63,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="class_id">Unique Id<span style="color:red">*</span></label>
+                                <label for="uid">Unique Id<span style="color:red">*</span></label>
                                 <input type="text" class="form-control" id="uid" name="uid"
                                     placeholder="Unique Id"
                                     value="{{ old('uid', isset($getdata->uid) ? $getdata->uid : '') }}" required />
@@ -72,18 +72,15 @@
                                 @enderror
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="status">STATUS<span style="color:red">*</span></label>
-                                <select name="status" id="status" class="form-control" required>
-                                    <option value="1"
-                                        {{ old('status', $userdata->status ?? '') == 1 ? 'selected' : '' }}>Active
-                                    </option>
-                                    <option value="0"
-                                        {{ old('status', $userdata->status ?? '') == 0 ? 'selected' : '' }}>Inactive
-                                    </option>
-                                </select>
-                                @error('document')
+                                <label for="block_no">BLOCK NO.<span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="block_no" name="block_no"
+                                    placeholder="Block No."
+                                    value="{{ old('block_no', isset($getdata->block_no) ? $getdata->block_no : '') }}"
+                                    required />
+                                @error('block_no')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -91,7 +88,68 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="date">Date</label>
+                                <label for="flat_no">FLAT NO.<span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="flat_no" name="flat_no"
+                                    placeholder="Flat No."
+                                    value="{{ old('flat_no', isset($getdata->flat_no) ? $getdata->flat_no : '') }}"
+                                    required />
+                                @error('flat_no')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        @php
+                            $user = Auth::user();
+                        @endphp
+                        @if ($user->role === 'admin' || $user->role === 'gateadmin')
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="created_for">CREATED FOR<span style="color:red">*</span></label>
+                                    <select name="created_for" id="created_for" class="form-control" required>
+                                        <option value="">Select Member</option>
+                                        @foreach ($Users as $index => $user)
+                                            <option value={{ $user->id }}
+                                                {{ ($getdata->created_for ?? '') == $user->id ? 'selected' : '' }}>
+                                                {{ Str::title($user->name) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('created_for')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            {{-- <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="status">STATUS<span style="color:red">*</span></label>
+                                    <select name="status" id="status" class="form-control" required readonly>
+                                        @php
+                                            $statuses = [
+                                                'Pending',
+                                                'Approved',
+                                                'Checked In',
+                                                'Checked Out',
+                                                'Rejected',
+                                            ];
+                                        @endphp
+                                        @foreach ($statuses as $index => $status)
+                                            <option value={{ $index + 1 }}
+                                                {{ ($userdata->status ?? '') == $index + 1 ? 'selected' : '' }}>
+                                                {{ Str::title($status) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('status')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div> --}}
+                        @endif
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="date">Date<span style="color:red">*</span></label>
                                 <input type="date" class="form-control" id="date" name="date"
                                     placeholder="Enter Visit Date"
                                     value="{{ old('date', isset($getdata->date) ? $getdata->date : '') }}" />
@@ -101,28 +159,29 @@
                             </div>
                         </div>
 
+
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="duration">Duration</label>
-                                <input type="text" class="form-control" id="date_range" name="duration" 
-                                    placeholder="Select Visit Duration"
-                                    value="{{ old('duration', isset($getdata->duration) ? $getdata->duration : '') }}" />
-                                @error('duration')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="duration">Maximum Allows Days</label>
-                                <input type="number" class="form-control" id="max_allow_days" name="max_allow_days" 
-                                    placeholder="Enter Maximum Allows Days" min="0"
+                                <label for="max_allow_days">Maximum Allows Days<span style="color:red">*</span></label>
+                                <input type="number" class="form-control" id="max_allow_days" name="max_allow_days"
+                                    placeholder="Enter Maximum Allows Days" min="0" max="7"
                                     value="{{ old('max_allow_days', isset($getdata->max_allow_days) ? $getdata->max_allow_days : '') }}" />
                                 @error('max_allow_days')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                         </div>
+                        {{-- <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="duration">Duration<span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="date_range" name="duration"
+                                    placeholder="Select Visit Duration"
+                                    value="{{ old('duration', isset($getdata->duration) ? $getdata->duration : '') }}" />
+                                @error('duration')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div> --}}
 
                         {{-- <div class="col-md-12">
                             <div class="form-group">

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Hash;
 use App\Models\User;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\AuthenticatesMobileUsers;
@@ -42,10 +43,23 @@ class LoginController extends Controller
         }
 
         $field = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'user_id';
-        if (empty($request->header('Device-Id'))) {
+
+        $deviceId = $request->header('Device-Id');
+        if (!$deviceId) {
             return response()->json([
                 'status'  => false,
                 'message' => "Device Id not found!"
+            ], 401);
+        }
+
+
+
+        $deviceExists  = Member::where('device_id', $deviceId)->exists();
+
+        if (!$deviceExists) {
+            return response()->json([
+                'status'  => false,
+                'message' => "Device Id Not Matched!"
             ], 401);
         }
 

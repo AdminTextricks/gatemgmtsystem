@@ -74,7 +74,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <div class="form-group">
                                 <label for="device_id">Device Id</label>
                                 <input type="text" class="form-control" id="device_id" name="device_id"
@@ -85,7 +85,7 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         
                         <div class="col-md-6">

@@ -111,7 +111,7 @@ class MemberController extends Controller
         // $action = $request->route()->parameter('action');
         $rules = [
             'uid'   => 'required|unique:members,uid,' . $request->edit_id,
-            'name' => 'required',
+            'name' => 'required|max:255',
             'email'      => 'nullable|unique:members,email,'. $request->edit_id,
             'mobile'       => 'required|numeric|unique:members,mobile,'. $request->edit_id,
             'status'       => 'required|numeric',
@@ -125,7 +125,7 @@ class MemberController extends Controller
             'name' => $request->name,
             'email'  => $request->email,
             'mobile' => $request->mobile,
-            'device_id' => $request->device_id,
+            // 'device_id' => $request->device_id,
             'status' => $request->status,
         ];
         

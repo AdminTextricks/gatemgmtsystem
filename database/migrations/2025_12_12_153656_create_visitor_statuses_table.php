@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('visiting_details', function (Blueprint $table) {
+        Schema::create('visitor_statuses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('visitor_id')->constrained('visitor_details')->cascadeOnDelete();
-            $table->string('visitor_key')->unique();
-            $table->date('date')->nullable();
-            $table->integer('days')->default(0);
+            $table->string('name');
+            $table->string('description');
+            $table->tinyInteger('status')->default(1)->comment('1=Active, 0=Inactive');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('visting_details');
+        Schema::dropIfExists('visitor_statuses');
     }
 };

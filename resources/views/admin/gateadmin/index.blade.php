@@ -46,25 +46,27 @@
 
                                     @foreach ($data as $getdata)
                                         <tr>
+                                            <td>{{ $getdata->gate_admin_id ?? 'NA' }}</td>
                                             <td>{{ $getdata->name ?? 'NA' }}</td>
                                             <td>{{ $getdata->email ?? 'NA' }}</td>
                                             <td>{{ $getdata->mobile  ?? 'NA' }}</td>
-                                            <td>{{ $getdata->uid  ?? 'NA' }}</td>
+                                            <td>{{ $getdata->gate_no  ?? 'NA' }}</td>
                                             <td>{{ $getdata->device_id   ?? 'NA' }}</td>
+                                            <td>{{ $getdata->shift   ?? 'NA' }}</td>
                                             <td><button type="button"
                                                     class="btn btn-primary border-0 p-1 text-capitalize statusBtn"
                                                     data-toggle="modal" data-target="#myModal"
                                                     data-id="{{ $getdata->id }}" data-status="{{ $getdata->status }}">
                                                     {{ $getdata->status ? 'Active' : 'InActive' }}</button></td>
                                             <td class="not-export">
-                                                <a href="{{ route('member_action', ['action' => 'Edit', 'id' => $getdata->id]) }}"
+                                                <a href="{{ route('gateadmin_action', ['action' => 'Edit', 'id' => $getdata->id]) }}"
                                                     class="text-primary">
                                                     <i class="fa fa-edit
                                             "></i>
                                                 </a>&nbsp;
 
                                                 <a href="javascript:void(0)" class="text-danger"
-                                                    onclick="deleteMember('{{ route('member.delete', $getdata->id) }}')">
+                                                    onclick="deleteMember('{{ route('gateadmin.delete', $getdata->id) }}')">
                                                     <i class="fa fa-trash"></i>
                                                 </a>
 

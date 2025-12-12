@@ -138,7 +138,6 @@ class UserController extends Controller
             'expires_at' => Carbon::now()->addMinutes(5),
         ]);
         }
-
         // Send email
         if (!empty($otpData)) {
             Mail::raw("Your OTP is: $otp", function ($message) use ($member) {

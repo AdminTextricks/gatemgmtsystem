@@ -16,7 +16,7 @@ class MemberSeeder extends Seeder
          Member::create([
             'name'      => 'Vivek Singh',
             'email'     => 'viveksingh@textricks.com',
-            'phone'     => '8039421087',
+            'mobile'     => '8039421087',
             'uid'       => 'UID123456',
             'device_id' => 'DEVICE98765',
         ]);

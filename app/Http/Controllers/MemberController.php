@@ -141,8 +141,9 @@ class MemberController extends Controller
 
     public function delete($id)
     {
-        $VisitorDetail = Member::findOrFail($id);
-        $VisitorDetail->delete();
+        $MemberDetail = Member::findOrFail($id);
+        User::where('email', $MemberDetail->email)->first()->delete();
+        $MemberDetail->delete();
         return response()->json(['success' => true, 'message' => 'Member deleted successfully.']);
     }
 }

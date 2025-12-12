@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'class' => '',
-    'elementActive' => 'memberlist',
+    'elementActive' => 'gateadminlist',
 ])
 @section('content')
     <style>
@@ -12,20 +12,33 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="{{ route('memberlist') }}" class="btn btn-outline-secondary btn-sm">
+                    <a href="{{ route('gateadminlist') }}" class="btn btn-outline-secondary btn-sm">
                         <i class="fa fa-arrow-left"></i> Back
                     </a>
-                    <p class="h6"><i class="fa fa-user"></i>&nbsp;&nbsp;{{ $action }} Member Details</p>
+                    <p class="h6"><i class="fa fa-user"></i>&nbsp;&nbsp;{{ $action }} Gate Admin Details</p>
                 </div>
                 <hr>
-                <form action="{{ route('member.action', ['action' => $action]) }}" method="post"
+                <form action="{{ route('gateadmin.action', ['action' => $action]) }}" method="post"
                     enctype="multipart/form-data">
                     @csrf
                     <div class="row">
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="mobile">NAME<span style="color:red">*</span></label>
+                                <label for="gate_admin_id">EMPLOYEE ID<span style="color:red">*</span></label>
+                                <input type="text" class="form-control" id="name" name="gate_admin_id"
+                                    placeholder="Employee Name"
+                                    value="{{ old('gate_admin_id', isset($getdata->gate_admin_id) ? $getdata->gate_admin_id : '') }}" required />
+                                @error('gate_admin_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                                <input type="hidden" name="edit_id" id="edit_id"
+                                    value="{{ isset($getdata->id) ? $getdata->id : '' }}" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name">NAME<span style="color:red">*</span></label>
                                 <input type="text" class="form-control" id="name" name="name"
                                     placeholder="Member Name"
                                     value="{{ old('name', isset($getdata->name) ? $getdata->name : '') }}" required />
@@ -63,23 +76,10 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="class_id">Unique Id<span style="color:red">*</span></label>
-                                <input type="text" class="form-control" id="uid" name="uid"
-                                    placeholder="Unique Id"
-                                    value="{{ old('uid', isset($getdata->uid) ? $getdata->uid : '') }}"
-                                    required />
-                                @error('uid')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="device_id">Device Id</label>
+                                <label for="device_id">Device Id<span style="color:red">*</span></label>
                                 <input type="text" class="form-control" id="device_id" name="device_id"
-                                    placeholder="Device Id"
-                                    value="{{ old('uid', isset($getdata->device_id) ? $getdata->device_id : '') }}"
+                                    placeholder="Device Id" required
+                                    value="{{ old('device_id', isset($getdata->device_id) ? $getdata->device_id : '') }}"
                                      />
                                 @error('device_id')
                                     <span class="text-danger">{{ $message }}</span>
@@ -87,6 +87,30 @@
                             </div>
                         </div>
 
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="gate_no">Gate No</label>
+                                <input type="text" class="form-control" id="gate_no" name="gate_no"
+                                    placeholder="Gate No"
+                                    value="{{ old('gate_no', isset($getdata->gate_no) ? $getdata->gate_no : '') }}"
+                                     />
+                                @error('gate_no')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="shift">Shift</label>
+                                <input type="text" class="form-control" id="shift" name="shift"
+                                    placeholder="Enter Shift"
+                                    value="{{ old('shift', isset($getdata->shift) ? $getdata->shift : '') }}"
+                                     />
+                                @error('gate_no')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
                         
                         <div class="col-md-6">
                             <div class="form-group">
@@ -99,7 +123,7 @@
                                         {{ old('status', $userdata->status ?? '') == 0 ? 'selected' : '' }}>Inactive
                                     </option>
                                 </select>
-                                @error('document')
+                                @error('status')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>

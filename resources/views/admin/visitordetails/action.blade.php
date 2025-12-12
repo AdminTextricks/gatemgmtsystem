@@ -25,7 +25,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="mobile">NAME<span style="color:red">*</span></label>
+                                <label for="name">NAME<span style="color:red">*</span></label>
                                 <input type="text" class="form-control" id="name" name="name"
                                     placeholder="Member Name"
                                     value="{{ old('name', isset($getdata->name) ? $getdata->name : '') }}" required />
@@ -83,7 +83,7 @@
                                         {{ old('status', $userdata->status ?? '') == 0 ? 'selected' : '' }}>Inactive
                                     </option>
                                 </select>
-                                @error('document')
+                                @error('status')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>

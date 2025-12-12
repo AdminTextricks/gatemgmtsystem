@@ -42,6 +42,13 @@ class LoginController extends Controller
         }
 
         $field = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'user_id';
+        if (empty($request->header('Device-Id'))) {
+            return response()->json([
+                'status'  => false,
+                'message' => "Device Id not found!"
+            ], 401);
+        }
+
         $user = User::where($field, $request->login)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {

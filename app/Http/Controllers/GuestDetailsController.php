@@ -60,7 +60,7 @@ class GuestDetailsController extends Controller
 
         $getdata = [];
         $memberdata = [];
-        $Users = User::where('status', 1)->whereNot('role', 'admin')->get();
+        $Users = User::where('status', 1)->whereNot('role', 'admin')->select('id', 'name')->get();
 
         if (isset($request->id) && !empty($request->id)) {
             $getdata = VisitorDetail::where('id', $request->id)->first();

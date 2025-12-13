@@ -52,7 +52,7 @@ class ApiGuestDetailsController extends Controller
         }
     }
 
-        // update user(VisitorDetail) status 
+    // update user(VisitorDetail) status 
 
     public function updatestatus(Request $request, $id = null)
     {
@@ -65,11 +65,11 @@ class ApiGuestDetailsController extends Controller
             if (!empty($VisitorDetail)) {
                 $VisitorDetail->status = $status;
                 $VisitorDetail->save();
-                return response()->json(['success' => true, 'message' => 'Status updated'],200);
+                return response()->json(['success' => true, 'message' => 'Status updated'], 200);
             }
             return response()->json(['success' => false, 'message' => 'User not found'], 203);
             // Success response
-           
+
         } catch (\Exception $e) {
 
             return response()->json([
@@ -86,18 +86,45 @@ class ApiGuestDetailsController extends Controller
 
     public function guest_action(Request $request)
     {
-        $action = $request->route()->parameter('action');
-
         $getdata = [];
-        $memberdata = [];
-        $Users = User::where('status', 1)->whereNot('role', 'admin')->get();
+        try {
+            $action = $request->route('action');;
+            $Users = User::where('status', 1)
+                ->where('role', '!=', 'admin')
+                ->select('id', 'name')
+                ->get();
+            if ($request->filled('id')) {
+                $getdata = VisitorDetail::where('id', $request->id)->first();
+                if (!$getdata) {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => 'Guest not found'
+                    ], 404);
+                }
 
-        if (isset($request->id) && !empty($request->id)) {
-            $getdata = VisitorDetail::where('id', $request->id)->first();
-            // $userdata = User::where('user_id', $getdata->id)->first();
+                return response()->json([
+                    'status' => true,
+                    'action' => $action,
+                    'users'  => $Users,
+                    'data'   => $getdata
+                ], 200);
+            }
+
+            // Create case
+            return response()->json([
+                'status' => true,
+                'action' => $action,
+                'users'  => $Users,
+                'data'   => null
+            ], 200);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
+            ], 500);
         }
-
-        return view('admin.guestdetails.action', compact('getdata', 'action', 'Users'));
     }
 
     //VisitorDetail form post request

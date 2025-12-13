@@ -29,7 +29,10 @@ Route::post('/check-phone-exist', [ApiMemberController::class, 'checkPhone'])->n
 Route::post('/link-device', [ApiUserController::class, 'member_post_action'])->name('link_device');
 Route::post('/verify-otp', [OtpCodeController::class, 'verifyMobileByOTP'])->name('verifyOtp');
 
-Route::group(["middleware"=>"auth:sanctum"], function(){
-Route::get('/vistorslist', [ApiGuestDetailsController::class, 'vistorslist'])->name('guestlist');
-Route::patch('/updatestatus/{id}', [ApiGuestDetailsController::class, 'updatestatus'])->name('update_visitor_status');
+Route::group(["middleware" => "auth:sanctum"], function () {
+    Route::get('/vistorslist', [ApiGuestDetailsController::class, 'vistorslist'])->name('guestlist');
+    Route::get('/{action}/{id?}', [ApiGuestDetailsController::class, 'guest_action'])->name('guest_action');
+    Route::patch('/updatestatus/{id}', [ApiGuestDetailsController::class, 'updatestatus'])->name('update_visitor_status');
+    Route::post('/post', [ApiGuestDetailsController::class, 'guest_post_action'])->name('guest.action');
+    Route::delete('/delete/{id}', [ApiGuestDetailsController::class, 'delete'])->name('guest.delete');
 });

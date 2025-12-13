@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Member;
 use Illuminate\Http\Request;
 
-class MemberController extends Controller
+class ApiMemberController extends Controller
 {
     public function index()
     {
@@ -113,7 +114,7 @@ class MemberController extends Controller
             'uid'   => 'required|unique:members,uid,' . $request->edit_id,
             'name' => 'required|max:255',
             'email'      => 'nullable|unique:members,email,'. $request->edit_id,
-            'mobile'       => 'required|numeric|digits:10|unique:members,mobile,'. $request->edit_id,
+            'mobile'       => 'required|numeric|unique:members,mobile,'. $request->edit_id,
             'status'       => 'required|numeric',
 
         ];

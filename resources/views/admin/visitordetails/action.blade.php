@@ -12,7 +12,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="{{ route('guestlist') }}" class="btn btn-outline-secondary btn-sm">
+                    <a href="{{ route('visitorlist') }}" class="btn btn-outline-secondary btn-sm">
                         <i class="fa fa-arrow-left"></i> Back
                     </a>
                     <p class="h6"><i class="fa fa-user"></i>&nbsp;&nbsp;{{ $action }} Guest Details</p>

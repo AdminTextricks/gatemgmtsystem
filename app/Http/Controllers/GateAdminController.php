@@ -85,7 +85,7 @@ class GateAdminController extends Controller
 
         if(!empty($gate_admin)){
             $userdata=[
-                "user_id"=>$gate_admin->gate_admin_id,
+                // "user_id"=>$gate_admin->gate_admin_id,
                 "name"=>$gate_admin->name,
                 "email"=>$gate_admin->email,
                 "password"=>Hash::make('123456'),
@@ -93,7 +93,7 @@ class GateAdminController extends Controller
                 "status"=>$gate_admin->status,
             ];
 
-           $user=User::updateOrCreate(['id'=>$request->edit_id], $userdata);
+           User::updateOrCreate(['user_id'=>$gate_admin->gate_admin_id], $userdata);
             
         }
 

@@ -1,56 +1,86 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Models\User;
-use App\Models\Member;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\VisitorDetail;
 use App\Http\Controllers\Controller;
+use App\Models\Member;
 use Illuminate\Support\Facades\Auth;
 
-class GuestDetailsController extends Controller
+class ApiGuestDetailsController extends Controller
 {
-    public function index()
+
+    public function vistorslist(Request $request)
     {
         $userId = Auth::id();
-        if (Auth::user()->role === 'admin') {
-            $data = VisitorDetail::with('request_status:id,name')->get();
-        } else {
-            $data = VisitorDetail::with('request_status:id,name')->where('created_for', $userId)->get();
-        }
-        $user_role = Auth::user()->role;
+        // $deviceId = $request->header('Device-Id');
 
-        return view('admin.guestdetails.index', compact('data'));
+        $data = [];
+
+        try {
+
+            if (Auth::user()->role === 'admin') {
+                $data = VisitorDetail::with('request_status:id,name')->get();
+            } else {
+                $data = VisitorDetail::with('request_status:id,name')->where('created_for', $userId)->get();
+            }
+
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'No users found',
+                    'data'    => []
+                ], 404);
+            }
+
+            // Success response
+            return response()->json([
+                'status'  => true,
+                'message' => 'User list fetched successfully',
+                'data'    => $data
+            ], 200);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function vistorslist()
-    {
-        $userId = Auth::id();
-        if (Auth::user()->role === 'admin') {
-            $data = VisitorDetail::with('request_status:id,name')->get();
-        } else {
-            $data = VisitorDetail::with('request_status:id,name')->where('created_for', $userId)->get();
-        }
-        $user_role = Auth::user()->role;
+        // update user(VisitorDetail) status 
 
-        return view('admin.guestdetails.index', compact('data'));
-    }
-
-
-    // update user(VisitorDetail) status 
     public function updatestatus(Request $request, $id = null)
     {
-        $VisitorDetail = VisitorDetail::find($id);
-        $status = $request->status;
-        if (!empty($VisitorDetail)) {
-            $VisitorDetail->status = $status;
-            $VisitorDetail->save();
-            return response()->json(['success' => true, 'message' => 'Status updated']);
+        // dd($id);
+        // dd($request->status);
+        try {
+
+            $VisitorDetail = VisitorDetail::find($id);
+            $status = $request->status;
+            if (!empty($VisitorDetail)) {
+                $VisitorDetail->status = $status;
+                $VisitorDetail->save();
+                return response()->json(['success' => true, 'message' => 'Status updated'],200);
+            }
+            return response()->json(['success' => false, 'message' => 'User not found'], 203);
+            // Success response
+           
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong',
+                'error'   => $e->getMessage()
+            ], 500);
         }
-        return response()->json(['success' => false, 'message' => 'User not found']);
     }
+
+
 
     //VisitorDetail form 
 

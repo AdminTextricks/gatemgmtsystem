@@ -2,10 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\MemberController;
-use App\Http\Controllers\OtpCodeController;
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Api\ApiUserController;
+use App\Http\Controllers\Api\OtpCodeController;
+use App\Http\Controllers\Api\ApiLoginController;
+use App\Http\Controllers\Api\ApiMemberController;
+use App\Http\Controllers\Api\ApiGuestDetailsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,12 +23,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/login', [LoginController::class, 'apiLogin']);
-Route::post('/check-device', [MemberController::class, 'checkDevice'])->name('check_device');
-Route::post('/check-phone-exist', [MemberController::class, 'checkPhone'])->name('check_phone');
-Route::post('/link-device', [UserController::class, 'member_post_action'])->name('link_device');
+Route::post('/login', [ApiLoginController::class, 'apiLogin']);
+Route::post('/check-device', [ApiMemberController::class, 'checkDevice'])->name('check_device');
+Route::post('/check-phone-exist', [ApiMemberController::class, 'checkPhone'])->name('check_phone');
+Route::post('/link-device', [ApiUserController::class, 'member_post_action'])->name('link_device');
 Route::post('/verify-otp', [OtpCodeController::class, 'verifyMobileByOTP'])->name('verifyOtp');
 
-Route::group(["middleware"=>"auth:santum"], function(){
-
+Route::group(["middleware"=>"auth:sanctum"], function(){
+Route::get('/vistorslist', [ApiGuestDetailsController::class, 'vistorslist'])->name('guestlist');
+Route::patch('/updatestatus/{id}', [ApiGuestDetailsController::class, 'updatestatus'])->name('update_visitor_status');
 });
